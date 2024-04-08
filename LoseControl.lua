@@ -1,7 +1,7 @@
 --[[
 -------------------------------------------
 -- Addon: LoseControl Classic
--- Version: 1.21
+-- Version: 1.22
 -- Authors: millanzarreta, Kouri
 -------------------------------------------
 
@@ -340,6 +340,7 @@ local spellIds = {
 	[18807]  = "Snare",				-- Mind Flay (talent) (rank 6)
 	[425205] = "Other",				-- Power Word: Barrier (damage taken reduced by 25%) (SoD Rune)
 	[407805] = "Other",				-- Sacrifice Redeemed (SoD Rune)
+	[431666] = "Other",				-- Surge of Light (next smite, flash heal, or binding heal is instant) (SoD Rune)
 	[425294] = "Immune",			-- Dispersion (not immune, damage taken reduced by 90%) (SoD Rune)
 	[402004] = "Immune",			-- Pain Suppression (damage taken reduced by 40%) (SoD Rune)
 
@@ -898,7 +899,6 @@ local spellIds = {
 	[436831] = "CC",				-- Static Fleece
 	[436473] = "CC",				-- Stun (Bloodstorm War Totem weapon)
 	[436537] = "CC",				-- GM Freeze
-	[426604] = "CC",				-- Rebooting
 	[432467] = "CC",				-- Transform
 	[435896] = "CC",				-- Cluck Cluck??
 	[440108] = "CC",				-- Pacify Self
@@ -915,12 +915,87 @@ local spellIds = {
 	[436818] = "Root",				-- Sprocketfire Breath
 	[437764] = "Root",				-- Consume
 	[441642] = "Root",				-- Gnomeregan Smash
-	[435359] = "Snare",				-- Hardened to the Core (Wirdal's Hardened Core trinket)
-	[434433] = "Snare",				-- Sludge
-	[424574] = "Snare",				-- Out of breath!
 	[435895] = "Other",				-- Gniodine Dispel (Gniodine Pill Bottle trinket) (immune to snare and immobilizing effects)
 	[436074] = "Other",				-- Trogg Rage (attack and movement speed increased, enraged)
 	[434907] = "Other",				-- Amplified Circuitry (physical damage and attacks speed increased)
+	[435359] = "Snare",				-- Hardened to the Core (Wirdal's Hardened Core trinket)
+	[434433] = "Snare",				-- Sludge
+	[424574] = "Snare",				-- Out of breath!
+	[449005] = "Immune",			-- Shrine of the Watcher
+	[443892] = "Immune",			-- Blood Ritual
+	[443848] = "Immune",			-- Blood Infusion
+	[443302] = "Immune",			-- Emerald Ward (not immune, damage taken reduced by 99%)
+	[437410] = "Immune",			-- Deep Slumber (not immune, damage taken reduced by 99%)
+	[446703] = "Immune",			-- Keen Eyes (immune to all except arcane)
+	[449009] = "Immune",			-- Protected by Shadows (immune to all except arcane)
+	[446586] = "Immune",			-- Dizzying Spin (not immune to dmg, only to LoC)
+	[446382] = "ImmuneSpell",		-- Attuned to the Void (Void-Powered Vambraces wrist item) (fear immune)
+	[442948] = "ImmunePhysical",	-- Blessing of Protection
+	[446733] = "CC",				-- Sleepwalk
+	[447579] = "CC",				-- Gloom
+	[446707] = "CC",				-- Parasomnia
+	[446391] = "CC",				-- Torment
+	[450600] = "CC",				-- Hex
+	[447544] = "CC",				-- Dizzy
+	[444522] = "CC",				-- Threatening Roar
+	[445498] = "CC",				-- Bellowing Roar
+	[443990] = "CC",				-- Frightsome Howl
+	[447397] = "CC",				-- Rift-ripping Roar
+	[446299] = "CC",				-- Familiar Chaos
+	[437928] = "CC",				-- Psychic Scream
+	[437324] = "CC",				-- Deep Slumber
+	[440586] = "CC",				-- Bash
+	[447891] = "CC",				-- Bash
+	[447555] = "CC",				-- Chest Pains
+	[446373] = "CC",				-- Corrupted Slam
+	[444892] = "CC",				-- Deathly Chill
+	[449879] = "CC",				-- Dream Fog
+	[437915] = "CC",				-- Hammers of Justice
+	[446728] = "CC",				-- Judgement of the Loa
+	[446354] = "CC",				-- Shield Slam
+	[448572] = "CC",				-- Sleep (Merithra's Inheritence item)
+	[450662] = "CC",				-- Sleep
+	[446296] = "CC",				-- Wake Up Dead
+	[445940] = "CC",				-- Unstable Cask
+	[445187] = "CC",				-- Permanent Feign Death
+	[446593] = "CC",				-- [DNT] Permanent Feign Death
+	[445716] = "CC",				-- [DNT] Visual Knockback
+	[446091] = "CC",				-- Aura of Paralyzing Dread (damage done dramatically reduced, damage taken dramatically increased)
+	[438101] = "CC",				-- Devour (damage done reduced by 90%)
+	[437868] = "CC",				-- Agonizing Weakness (damage done reduced by 50%)
+	[447548] = "CC",				-- Twisted Tranquility (time between attacks increased by 100%)
+	[438136] = "CC",				-- Nauseous Gas (attack and cast speed reduced by 75%)
+	[448574] = "CC",				-- Triple Bolt (attack and cast speed reduced by 75%)
+	[443975] = "CC",				-- Spirit Chains (attack, cast and movement speed reduced by 50%)
+	[447588] = "CC",				-- Wake Up Dead (attack, cast and movement speed reduced by 50%)
+	[447581] = "CC",				-- Gloom (melee, ranged and spell hit chance reduced by 30%)
+	[445282] = "Disarm",			-- Disarm
+	[446639] = "Silence",			-- Dessicated Dreams
+	[447589] = "Silence",			-- Deafening Screech
+	[440574] = "Root",				-- Earthgrab
+	[446731] = "Root",				-- Headhunter's Barbed Spear (Headhunter's Barbed Spear weapon)
+	[447590] = "Root",				-- Infernal Lasso
+	[443265] = "Root",				-- Infernal Lasso (Infernal Lasso trinket)
+	[448828] = "Root",				-- Overdrive
+	[449203] = "Root",				-- Revolting Retch
+	[450005] = "Root",				-- Spare Change
+	[446631] = "Root",				-- Spare Change
+	[446506] = "Other",				-- Spreading Corruption (all damage taken increased by 100%)
+	[446287] = "Other",				-- Unbound Soul (damage taken increased by 75%)
+	[446888] = "Other",				-- Totem Challenge (damage taken increased by 50%)
+	[444975] = "Other",				-- Statue Empowerment (damage done increased by 500%)
+	[440882] = "Other",				-- Infernal Armor
+	[447591] = "Other",				-- Undying Fel Fire
+	[437617] = "Snare",				-- Demolishing Smash
+	[440813] = "Snare",				-- Frozen Orb
+	[438142] = "Snare",				-- Gunk
+	[447892] = "Snare",				-- Skin of Rock
+	[448573] = "Snare",				-- Triple Bolt
+	[443856] = "Snare",				-- Caustic Overflow
+	[446806] = "Snare",				-- Sunken Hex (Witch Doctor's Hex Stick trinket)
+	[448614] = "Snare",				-- Bargain Bush (Bargain Bush trinket)
+	[446100] = "Snare",				-- Inanimate (Lledra's Inanimator trinket)
+	[448618] = "Snare",				-- Empty Supply Crate (Empty Supply Crate trinket)
 	------------------------
 	---- PVE CLASSIC SEASON OF MASTERY AND HARDCORE
 	------------------------
@@ -4772,7 +4847,7 @@ function LoseControl:ADDON_LOADED(arg1)
 			_G.LoseControlDB.version = DBdefaults.version
 		end
 		LoseControlDB = _G.LoseControlDB
-		self.VERSION = "1.21"
+		self.VERSION = "1.22"
 		self.noCooldownCount = LoseControlDB.noCooldownCount
 		self.noBlizzardCooldownCount = LoseControlDB.noBlizzardCooldownCount
 		self.noGetExtraAuraDurationInformation = LoseControlDB.noGetExtraAuraDurationInformation
@@ -5725,6 +5800,8 @@ function LoseControl:UNIT_AURA(unitId, updatedAuras, typeUpdate) -- fired when a
 			elseif (spellId == 7744 and (LoseControlDB.customSpellIds[7744] ~= nil) and (reactionToPlayer == "friendly" or self.unitId == "player" or (playerClass ~= 1 and playerClass ~= 5 and playerClass ~= 9))) then	-- Will of the Forsaken	(undead racial) (immune to charm, fear and sleep)
 				newCategory = "Other"
 			elseif (spellId == 12733 and (LoseControlDB.customSpellIds[12733] ~= nil) and (reactionToPlayer == "friendly" or self.unitId == "player" or (playerClass ~= 1 and playerClass ~= 5 and playerClass ~= 9))) then	-- Fearless (Glimmering Mithril Insignia trinket) (immune to fear)
+				newCategory = "Other"
+			elseif (spellId == 446382 and (LoseControlDB.customSpellIds[446382] ~= nil) and (reactionToPlayer == "friendly" or self.unitId == "player" or (playerClass ~= 1 and playerClass ~= 5 and playerClass ~= 9))) then	-- Attuned to the Void (Void-Powered Vambraces wrist item) (immune to fear)
 				newCategory = "Other"
 			end
 
