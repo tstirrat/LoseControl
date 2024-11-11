@@ -66,6 +66,8 @@ local LCUnitPendingUnitWatchFrames = {}
 local LCCombatLockdownDelayFrame = CreateFrame("Frame")
 local RefreshPendingUnitWatchState = function() end
 local delayFunc_RefreshPendingUnitWatchState = false
+local CheckboxTemplate = 'UICheckButtonTemplate'
+local settingsCategory
 LCCombatLockdownDelayFrame:SetScript("OnEvent", function(self,event)
 	if event=="PLAYER_REGEN_ENABLED" then
 		self:UnregisterEvent("PLAYER_REGEN_ENABLED")
@@ -6381,7 +6383,7 @@ end
 subText:SetText(notes)
 
 -- "Unlock" checkbox - allow the frames to be moved
-local Unlock = CreateFrame("CheckButton", O.."Unlock", OptionsPanel.container, "OptionsCheckButtonTemplate")
+local Unlock = CreateFrame("CheckButton", O.."Unlock", OptionsPanel.container, CheckboxTemplate)
 _G[O.."UnlockText"]:SetText(L["Unlock"])
 Unlock.nextUnlockLoopTime = 0
 function Unlock:LoopFunction()
@@ -6520,7 +6522,7 @@ function Unlock:OnClick()
 end
 Unlock:SetScript("OnClick", Unlock.OnClick)
 
-local DisableGetEnemiesBuffsInformation = CreateFrame("CheckButton", O.."DisableGetEnemiesBuffsInformation", OptionsPanel.container, "OptionsCheckButtonTemplate")
+local DisableGetEnemiesBuffsInformation = CreateFrame("CheckButton", O.."DisableGetEnemiesBuffsInformation", OptionsPanel.container, CheckboxTemplate)
 _G[O.."DisableGetEnemiesBuffsInformationText"]:SetText(L["Disable Get Enemies Buff Information"])
 function DisableGetEnemiesBuffsInformation:Check(value)
 	LoseControlDB.noGetEnemiesBuffsInformation = self:GetChecked()
@@ -6531,7 +6533,7 @@ DisableGetEnemiesBuffsInformation:SetScript("OnClick", function(self)
 	DisableGetEnemiesBuffsInformation:Check(self:GetChecked())
 end)
 
-local DisableGetExtraDurationInformation = CreateFrame("CheckButton", O.."DisableGetExtraDurationInformation", OptionsPanel.container, "OptionsCheckButtonTemplate")
+local DisableGetExtraDurationInformation = CreateFrame("CheckButton", O.."DisableGetExtraDurationInformation", OptionsPanel.container, CheckboxTemplate)
 _G[O.."DisableGetExtraDurationInformationText"]:SetText(L["Disable Get Extra Aura Duration Information"])
 DisableGetExtraDurationInformation:SetScript("OnClick", function(self)
 	LoseControlDB.noGetExtraAuraDurationInformation = self:GetChecked()
@@ -6547,7 +6549,7 @@ DisableGetExtraDurationInformation:SetScript("OnClick", function(self)
 	end
 end)
 
-local DisableBlizzardCooldownCount = CreateFrame("CheckButton", O.."DisableBlizzardCooldownCount", OptionsPanel.container, "OptionsCheckButtonTemplate")
+local DisableBlizzardCooldownCount = CreateFrame("CheckButton", O.."DisableBlizzardCooldownCount", OptionsPanel.container, CheckboxTemplate)
 _G[O.."DisableBlizzardCooldownCountText"]:SetText(L["Disable Blizzard Countdown"])
 function DisableBlizzardCooldownCount:Check(value)
 	LoseControlDB.noBlizzardCooldownCount = value
@@ -6562,7 +6564,7 @@ DisableBlizzardCooldownCount:SetScript("OnClick", function(self)
 	DisableBlizzardCooldownCount:Check(self:GetChecked())
 end)
 
-local DisableCooldownCount = CreateFrame("CheckButton", O.."DisableCooldownCount", OptionsPanel.container, "OptionsCheckButtonTemplate")
+local DisableCooldownCount = CreateFrame("CheckButton", O.."DisableCooldownCount", OptionsPanel.container, CheckboxTemplate)
 _G[O.."DisableCooldownCountText"]:SetText(L["Disable OmniCC Support"])
 DisableCooldownCount:SetScript("OnClick", function(self)
 	LoseControlDB.noCooldownCount = self:GetChecked()
@@ -6663,7 +6665,8 @@ OptionsPanel.refresh = function() -- This method will run when the Interface Opt
 	end
 end
 
-InterfaceOptions_AddCategory(OptionsPanel)
+settingsCategory, _ = _G.Settings.RegisterCanvasLayoutCategory(OptionsPanel, OptionsPanel.name)
+_G.Settings.RegisterAddOnCategory(settingsCategory)
 
 -------------------------------------------------------------------------------
 -- Create sub-option frames
@@ -7569,7 +7572,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 
 	local DisableInBG
 	if v == "party" then
-		DisableInBG = CreateFrame("CheckButton", O..v.."DisableInBG", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		DisableInBG = CreateFrame("CheckButton", O..v.."DisableInBG", OptionsPanelFrame.container, CheckboxTemplate)
 		_G[O..v.."DisableInBGText"]:SetText(L["DisableInBG"])
 		DisableInBG:SetScript("OnClick", function(self)
 			LoseControlDB.disablePartyInBG = self:GetChecked()
@@ -7584,7 +7587,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 			end
 		end)
 	elseif v == "raid" then
-		DisableInBG = CreateFrame("CheckButton", O..v.."DisableInBG", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		DisableInBG = CreateFrame("CheckButton", O..v.."DisableInBG", OptionsPanelFrame.container, CheckboxTemplate)
 		_G[O..v.."DisableInBGText"]:SetText(L["DisableInBG"])
 		DisableInBG:SetScript("OnClick", function(self)
 			LoseControlDB.disableRaidInBG = self:GetChecked()
@@ -7602,7 +7605,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 
 	local DisableInRaid
 	if v == "party" then
-		DisableInRaid = CreateFrame("CheckButton", O..v.."DisableInRaid", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		DisableInRaid = CreateFrame("CheckButton", O..v.."DisableInRaid", OptionsPanelFrame.container, CheckboxTemplate)
 		_G[O..v.."DisableInRaidText"]:SetText(L["DisableInRaid"])
 		DisableInRaid:SetScript("OnClick", function(self)
 			LoseControlDB.disablePartyInRaid = self:GetChecked()
@@ -7620,7 +7623,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 
 	local ShowNPCInterrupts
 	if v == "target" or v == "targettarget" or v == "nameplate" then
-		ShowNPCInterrupts = CreateFrame("CheckButton", O..v.."ShowNPCInterrupts", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		ShowNPCInterrupts = CreateFrame("CheckButton", O..v.."ShowNPCInterrupts", OptionsPanelFrame.container, CheckboxTemplate)
 		_G[O..v.."ShowNPCInterruptsText"]:SetText(L["ShowNPCInterrupts"])
 		ShowNPCInterrupts:SetScript("OnClick", function(self)
 			if v == "target" then
@@ -7647,7 +7650,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 
 	local DisablePlayerTargetTarget
 	if v == "targettarget" then
-		DisablePlayerTargetTarget = CreateFrame("CheckButton", O..v.."DisablePlayerTargetTarget", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		DisablePlayerTargetTarget = CreateFrame("CheckButton", O..v.."DisablePlayerTargetTarget", OptionsPanelFrame.container, CheckboxTemplate)
 		_G[O..v.."DisablePlayerTargetTargetText"]:SetText(L["DisablePlayerTargetTarget"])
 		DisablePlayerTargetTarget:SetScript("OnClick", function(self)
 			LoseControlDB.disablePlayerTargetTarget = self:GetChecked()
@@ -7662,7 +7665,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 
 	local DisableTargetTargetTarget
 	if v == "targettarget" then
-		DisableTargetTargetTarget = CreateFrame("CheckButton", O..v.."DisableTargetTargetTarget", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		DisableTargetTargetTarget = CreateFrame("CheckButton", O..v.."DisableTargetTargetTarget", OptionsPanelFrame.container, CheckboxTemplate)
 		_G[O..v.."DisableTargetTargetTargetText"]:SetText(L["DisableTargetTargetTarget"])
 		DisableTargetTargetTarget:SetScript("OnClick", function(self)
 			LoseControlDB.disableTargetTargetTarget = self:GetChecked()
@@ -7677,7 +7680,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 
 	local DisablePlayerTargetPlayerTargetTarget
 	if v == "targettarget" then
-		DisablePlayerTargetPlayerTargetTarget = CreateFrame("CheckButton", O..v.."DisablePlayerTargetPlayerTargetTarget", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		DisablePlayerTargetPlayerTargetTarget = CreateFrame("CheckButton", O..v.."DisablePlayerTargetPlayerTargetTarget", OptionsPanelFrame.container, CheckboxTemplate)
 		_G[O..v.."DisablePlayerTargetPlayerTargetTargetText"]:SetText(L["DisablePlayerTargetPlayerTargetTarget"])
 		DisablePlayerTargetPlayerTargetTarget:SetScript("OnClick", function(self)
 			LoseControlDB.disablePlayerTargetPlayerTargetTarget = self:GetChecked()
@@ -7692,7 +7695,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 
 	local DisableTargetDeadTargetTarget
 	if v == "targettarget" then
-		DisableTargetDeadTargetTarget = CreateFrame("CheckButton", O..v.."DisableTargetDeadTargetTarget", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		DisableTargetDeadTargetTarget = CreateFrame("CheckButton", O..v.."DisableTargetDeadTargetTarget", OptionsPanelFrame.container, CheckboxTemplate)
 		_G[O..v.."DisableTargetDeadTargetTargetText"]:SetText(L["DisableTargetDeadTargetTarget"])
 		DisableTargetDeadTargetTarget:SetScript("OnClick", function(self)
 			LoseControlDB.disableTargetDeadTargetTarget = self:GetChecked()
@@ -8082,7 +8085,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 
 	local catListEnChecksButtons = { "PvE", "Immune", "ImmuneSpell", "ImmunePhysical", "CC", "Silence", "Disarm", "Root", "Snare", "Other" }
 	local CategoriesCheckButtons = { }
-	local FriendlyInterrupt = CreateFrame("CheckButton", O..v.."FriendlyInterrupt", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+	local FriendlyInterrupt = CreateFrame("CheckButton", O..v.."FriendlyInterrupt", OptionsPanelFrame.container, CheckboxTemplate)
 	FriendlyInterrupt:SetHitRectInsets(0, -36, 0, 0)
 	_G[O..v.."FriendlyInterruptText"]:SetText(L["CatFriendly"])
 	FriendlyInterrupt:SetScript("OnClick", function(self)
@@ -8104,7 +8107,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 	end)
 	tblinsert(CategoriesCheckButtons, { frame = FriendlyInterrupt, auraType = "interrupt", reaction = "friendly", categoryType = "Interrupt", anchorPos = CategoryEnabledInterruptLabel, xPos = 140, yPos = 5 })
 	if v == "target" or v == "targettarget" or v == "nameplate" then
-		local EnemyInterrupt = CreateFrame("CheckButton", O..v.."EnemyInterrupt", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		local EnemyInterrupt = CreateFrame("CheckButton", O..v.."EnemyInterrupt", OptionsPanelFrame.container, CheckboxTemplate)
 		EnemyInterrupt:SetHitRectInsets(0, -36, 0, 0)
 		_G[O..v.."EnemyInterruptText"]:SetText(L["CatEnemy"])
 		EnemyInterrupt:SetScript("OnClick", function(self)
@@ -8123,7 +8126,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 		tblinsert(CategoriesCheckButtons, { frame = EnemyInterrupt, auraType = "interrupt", reaction = "enemy", categoryType = "Interrupt", anchorPos = CategoryEnabledInterruptLabel, xPos = 270, yPos = 5 })
 	end
 	for _, cat in pairs(catListEnChecksButtons) do
-		local FriendlyBuff = CreateFrame("CheckButton", O..v.."Friendly"..cat.."Buff", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		local FriendlyBuff = CreateFrame("CheckButton", O..v.."Friendly"..cat.."Buff", OptionsPanelFrame.container, CheckboxTemplate)
 		FriendlyBuff:SetHitRectInsets(0, -36, 0, 0)
 		_G[O..v.."Friendly"..cat.."BuffText"]:SetText(L["CatFriendlyBuff"])
 		FriendlyBuff:SetScript("OnClick", function(self)
@@ -8144,7 +8147,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 			end
 		end)
 		tblinsert(CategoriesCheckButtons, { frame = FriendlyBuff, auraType = "buff", reaction = "friendly", categoryType = cat, anchorPos = CategoriesLabels[cat], xPos = 140, yPos = 5 })
-		local FriendlyDebuff = CreateFrame("CheckButton", O..v.."Friendly"..cat.."Debuff", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		local FriendlyDebuff = CreateFrame("CheckButton", O..v.."Friendly"..cat.."Debuff", OptionsPanelFrame.container, CheckboxTemplate)
 		FriendlyDebuff:SetHitRectInsets(0, -36, 0, 0)
 		_G[O..v.."Friendly"..cat.."DebuffText"]:SetText(L["CatFriendlyDebuff"])
 		FriendlyDebuff:SetScript("OnClick", function(self)
@@ -8166,7 +8169,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 		end)
 		tblinsert(CategoriesCheckButtons, { frame = FriendlyDebuff, auraType = "debuff", reaction = "friendly", categoryType = cat, anchorPos = CategoriesLabels[cat], xPos = 205, yPos = 5 })
 		if v == "target" or v == "targettarget" or v == "nameplate" then
-			local EnemyBuff = CreateFrame("CheckButton", O..v.."Enemy"..cat.."Buff", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+			local EnemyBuff = CreateFrame("CheckButton", O..v.."Enemy"..cat.."Buff", OptionsPanelFrame.container, CheckboxTemplate)
 			EnemyBuff:SetHitRectInsets(0, -36, 0, 0)
 			_G[O..v.."Enemy"..cat.."BuffText"]:SetText(L["CatEnemyBuff"])
 			EnemyBuff:SetScript("OnClick", function(self)
@@ -8185,7 +8188,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 			tblinsert(CategoriesCheckButtons, { frame = EnemyBuff, auraType = "buff", reaction = "enemy", categoryType = cat, anchorPos = CategoriesLabels[cat], xPos = 270, yPos = 5 })
 		end
 		if v == "target" or v == "targettarget" or v == "nameplate" then
-			local EnemyDebuff = CreateFrame("CheckButton", O..v.."Enemy"..cat.."Debuff", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+			local EnemyDebuff = CreateFrame("CheckButton", O..v.."Enemy"..cat.."Debuff", OptionsPanelFrame.container, CheckboxTemplate)
 			EnemyDebuff:SetHitRectInsets(0, -36, 0, 0)
 			_G[O..v.."Enemy"..cat.."DebuffText"]:SetText(L["CatEnemyDebuff"])
 			EnemyDebuff:SetScript("OnClick", function(self)
@@ -8208,7 +8211,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 	local CategoriesCheckButtonsPlayer2
 	if (v == "player") then
 		CategoriesCheckButtonsPlayer2 = { }
-		local FriendlyInterruptPlayer2 = CreateFrame("CheckButton", O..v.."FriendlyInterruptPlayer2", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		local FriendlyInterruptPlayer2 = CreateFrame("CheckButton", O..v.."FriendlyInterruptPlayer2", OptionsPanelFrame.container, CheckboxTemplate)
 		FriendlyInterruptPlayer2:SetHitRectInsets(0, -36, 0, 0)
 		_G[O..v.."FriendlyInterruptPlayer2Text"]:SetText(L["CatFriendly"].."|cfff28614(Icon2)|r")
 		FriendlyInterruptPlayer2:SetScript("OnClick", function(self)
@@ -8220,7 +8223,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 		end)
 		tblinsert(CategoriesCheckButtonsPlayer2, { frame = FriendlyInterruptPlayer2, auraType = "interrupt", reaction = "friendly", categoryType = "Interrupt", anchorPos = CategoryEnabledInterruptLabel, xPos = 310, yPos = 5 })
 		for _, cat in pairs(catListEnChecksButtons) do
-			local FriendlyBuffPlayer2 = CreateFrame("CheckButton", O..v.."Friendly"..cat.."BuffPlayer2", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+			local FriendlyBuffPlayer2 = CreateFrame("CheckButton", O..v.."Friendly"..cat.."BuffPlayer2", OptionsPanelFrame.container, CheckboxTemplate)
 			FriendlyBuffPlayer2:SetHitRectInsets(0, -36, 0, 0)
 			_G[O..v.."Friendly"..cat.."BuffPlayer2Text"]:SetText(L["CatFriendlyBuff"].."|cfff28614(Icon2)|r")
 			FriendlyBuffPlayer2:SetScript("OnClick", function(self)
@@ -8231,7 +8234,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 				end
 			end)
 			tblinsert(CategoriesCheckButtonsPlayer2, { frame = FriendlyBuffPlayer2, auraType = "buff", reaction = "friendly", categoryType = cat, anchorPos = CategoriesLabels[cat], xPos = 310, yPos = 5 })
-			local FriendlyDebuffPlayer2 = CreateFrame("CheckButton", O..v.."Friendly"..cat.."DebuffPlayer2", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+			local FriendlyDebuffPlayer2 = CreateFrame("CheckButton", O..v.."Friendly"..cat.."DebuffPlayer2", OptionsPanelFrame.container, CheckboxTemplate)
 			FriendlyDebuffPlayer2:SetHitRectInsets(0, -36, 0, 0)
 			_G[O..v.."Friendly"..cat.."DebuffPlayer2Text"]:SetText(L["CatFriendlyDebuff"].."|cfff28614(Icon2)|r")
 			FriendlyDebuffPlayer2:SetScript("OnClick", function(self)
@@ -8247,7 +8250,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 
 	local DuplicatePlayerPortrait
 	if v == "player" then
-		DuplicatePlayerPortrait = CreateFrame("CheckButton", O..v.."DuplicatePlayerPortrait", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		DuplicatePlayerPortrait = CreateFrame("CheckButton", O..v.."DuplicatePlayerPortrait", OptionsPanelFrame.container, CheckboxTemplate)
 		_G[O..v.."DuplicatePlayerPortraitText"]:SetText(L["DuplicatePlayerPortrait"])
 		function DuplicatePlayerPortrait:Check(value)
 			LoseControlDB.duplicatePlayerPortrait = self:GetChecked()
@@ -8396,7 +8399,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 
 	local EnabledPartyPlayerIcon
 	if v == "party" then
-		EnabledPartyPlayerIcon = CreateFrame("CheckButton", O..v.."EnabledPartyPlayerIcon", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+		EnabledPartyPlayerIcon = CreateFrame("CheckButton", O..v.."EnabledPartyPlayerIcon", OptionsPanelFrame.container, CheckboxTemplate)
 		_G[O..v.."EnabledPartyPlayerIconText"]:SetText(L["EnabledPartyPlayerIcon"])
 		function EnabledPartyPlayerIcon:Check(value)
 			local enabled = self:GetChecked()
@@ -8601,7 +8604,7 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 		if AnchorFrameStrataDropDown then UIDropDownMenu_DisableDropDown(AnchorFrameStrataDropDown) end
 	end
 
-	local Enabled = CreateFrame("CheckButton", O..v.."Enabled", OptionsPanelFrame.container, "OptionsCheckButtonTemplate")
+	local Enabled = CreateFrame("CheckButton", O..v.."Enabled", OptionsPanelFrame.container, CheckboxTemplate)
 	_G[O..v.."EnabledText"]:SetText(L["Enabled"])
 	Enabled:SetScript("OnClick", function(self)
 		local enabled = self:GetChecked()
@@ -9023,7 +9026,8 @@ for _, v in ipairs({ "player", "pet", "target", "targettarget", "party", "raid",
 		UIDropDownMenu_SetWidth(AnchorFrameStrataDropDown, 140)
 	end
 
-	InterfaceOptions_AddCategory(OptionsPanelFrame)
+    local category, _ = _G.Settings.RegisterCanvasLayoutCategory(OptionsPanelFrame, OptionsPanelFrame.name)
+    _G.Settings.RegisterAddOnCategory(category)
 end
 
 -------------------------------------------------------------------------------
@@ -9309,7 +9313,6 @@ SlashCmdList[addonName] = function(cmd)
 		SlashCmd[args[1]](unpack(args))
 	else
 		print(addonName, ": Type \"/lc help\" for more options.")
-		InterfaceOptionsFrame_OpenToCategory(OptionsPanel)
-		InterfaceOptionsFrame_OpenToCategory(OptionsPanel)
+		_G.Settings.OpenToCategory(settingsCategory)
 	end
 end
